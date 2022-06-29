@@ -7,7 +7,7 @@ const Home: NextPage = () => {
   const [contractAddress, setContractAddress] = useState(
     '0xA808B22ffd2c472aD1278088F16D4010E6a54D5F'
   );
-  const { holders } = useTokenHolders(contractAddress);
+  const { holders, loading, error } = useTokenHolders(contractAddress);
 
   return (
     <div className='p-10 flex flex-col items-center'>
@@ -38,7 +38,13 @@ const Home: NextPage = () => {
         />
       </div>
 
-      {holders && (
+      {loading && (
+        <div className='flex flex-col items-center mt-8'>
+          <p className='text-zinc-700'>Loading...</p>
+        </div>
+      )}
+
+      {holders.length > 0 && !loading && (
         <table className='mt-8'>
           <thead className='p-4 border rounded'>
             <tr>
@@ -57,6 +63,14 @@ const Home: NextPage = () => {
             })}
           </tbody>
         </table>
+      )}
+
+      {error && (
+        <div className='flex flex-col items-center mt-8'>
+          <p className='text-red-700'>
+            Error: {JSON.stringify(error, null, 2)}
+          </p>
+        </div>
       )}
     </div>
   );
